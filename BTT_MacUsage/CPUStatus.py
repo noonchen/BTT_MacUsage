@@ -97,11 +97,11 @@ def getIconPath(ProcessPath):
             #Note that the icon_name is not always with .icns suffix, e.g. Mail.app 
             icon_path = App_root + "/Contents/Resources/" + (icon_name if ".icns" in icon_name else icon_name+".icns")
         except:
-            icon_path = script_path+"/icons/GenericApplicationIcon.icns"
+            icon_path = "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/GenericApplicationIcon.icns"
     elif ".framework" in ProcessPath:
-        icon_path = script_path+"/icons/KEXT.icns"
+        icon_path = "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/KEXT.icns"
     else:
-        icon_path = script_path+"/icons/ExecutableBinaryIcon.icns"
+        icon_path = "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/ExecutableBinaryIcon.icns"
     
     return icon_path
 
