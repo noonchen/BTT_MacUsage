@@ -125,8 +125,14 @@ def format_data(data, infoType, sortBy, index):
         process_name_list = (raw_name).split(delimiter)
         NumOfWords = len(process_name_list)
         if NumOfWords == 1:
-            process_name = process_name_list[0]
-            font_size = 14
+            NameLength = len(raw_name)
+            if NameLength > 25:
+                # If the name is too long
+                process_name = raw_name[:-(-NameLength//2)] + "-\n" + raw_name[-(-NameLength//2):]
+                font_size = 11
+            else:
+                process_name = process_name_list[0]
+                font_size = 14
         else:
             process_name = delimiter.join(process_name_list[:-(-NumOfWords//2)]) + ("." if delimiter=="." else "") + "\n" + delimiter.join(process_name_list[-(-NumOfWords//2):])
             font_size = 11
