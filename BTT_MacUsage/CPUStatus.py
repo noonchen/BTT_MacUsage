@@ -59,6 +59,7 @@ def parseInfo(raw_data, showChildProcess):
                 else:
                     dic[line_list[1]] = [float(line_list[2]), line_list[3], 0]
     data_list = [[pid]+dic[pid] for pid in dic]
+    # [pid, pcpu, comm, childNo.]
     data_list.sort(key=lambda x:x[1], reverse=True)
     return data_list
 
@@ -213,6 +214,20 @@ def main():
         except:
             #Error indicates the data is not ready yet
             return jsonfy(text="Gathering Data")
+        
+    elif "kill_process" in argv_dict:
+        try:
+            index = int(argv_dict["kill_process"])
+            [showChildProcess, data] = pickle.load(open(script_path+"/CPUStatus/data", 'rb'))
+            PID = data[index][0]
+            processName = data[index][2].split("/")[-1].strip()
+            decision = check_output(["osascript", 
+                          "-e", 
+                          '''tell application "System Events" to get button returned of (display alert "Force quiting this process:\n%s" message "Be sure to save all your works, there's no turning back!" as critical buttons {"MERCY", "KILL"} default button "MERCY")'''%processName]).decode('utf-8').strip()
+            if decision == "KILL":
+                check_output(["kill", "-9", PID])
+        except:
+            print("Something's wrong")
     else:
         print("Invalid arguments")
 
