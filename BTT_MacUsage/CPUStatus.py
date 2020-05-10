@@ -43,10 +43,10 @@ def parseInfo(raw_data, showChildProcess):
                     dic.pop(line_list[1])
                 elif (line_list[0] in dic) and (not line_list[1] in dic):
                     #current process has no child, its parent is in dictionary
-                    dic[line_list[0]] = [dic[line_list[0]][0]+float(line_list[2]), dic[line_list[0]][-1], 1 + dic[line_list[0]][2]]
+                    dic[line_list[0]] = [dic[line_list[0]][0]+float(line_list[2]), dic[line_list[0]][1], 1 + dic[line_list[0]][2]]
                 elif (line_list[0] in dic) and (line_list[1] in dic):
                     #current process has child(s), its parent is in dictionary
-                    dic[line_list[0]] = [dic[line_list[0]][0]+dic[line_list[1]][0]+float(line_list[2]), dic[line_list[0]][-1], 1 + dic[line_list[1]][2] + dic[line_list[0]][2]]
+                    dic[line_list[0]] = [dic[line_list[0]][0]+dic[line_list[1]][0]+float(line_list[2]), dic[line_list[0]][1], 1 + dic[line_list[1]][2] + dic[line_list[0]][2]]
                     #remove current process from dic
                     dic.pop(line_list[1])
 
@@ -183,7 +183,7 @@ def main():
         if argv.startswith("-"):
             arg, val = argv.strip("-").split("=")
             argv_dict[arg] = val
-
+    # argv_dict = {"showChildProcess":"False", "index":"1", "infoType":"app"}
     if "showChildProcess" in argv_dict:
         showChildProcess=boolean(argv_dict["showChildProcess"])
         data = get_PS_result(showChildProcess=showChildProcess)
@@ -223,7 +223,7 @@ def main():
             processName = data[index][2].split("/")[-1].strip()
             decision = check_output(["osascript", 
                           "-e", 
-                          '''tell application "System Events" to get button returned of (display alert "Force quiting this process:\n%s" message "Be sure to save all your works, there's no turning back!" as critical buttons {"MERCY", "KILL"} default button "MERCY")'''%processName]).decode('utf-8').strip()
+                          '''tell application "System Events" to get button returned of (display alert "Force quiting this process\n%s" message "Be sure to save all your works, there's no turning back!" as critical buttons {"MERCY", "KILL"} default button "MERCY")'''%processName]).decode('utf-8').strip()
             if decision == "KILL":
                 check_output(["kill", "-9", PID])
         except:
